@@ -9,8 +9,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
-        html,body{overflow:hidden;height:100%;width:100%;position:fixed;top:0;left:0}
-        body{background:#0a0a1a;display:flex;touch-action:none;transition:background .3s}
+        html,body{overflow:hidden;height:100%;width:100%;position:fixed;top:0;left:0;background:#0a0a1a}
+        body{display:flex;touch-action:none;transition:background .3s}
         body.light-theme{background:#f0f0fa}
         body.light-theme .stars-bg,body.light-theme .nebula-bg{display:none}
         body.light-theme .sidebar{background:rgba(240,240,250,.92);border-right:1px solid rgba(108,92,231,.1)}
@@ -85,9 +85,9 @@
         .chat-item{padding:10px 14px;border-radius:10px;margin-bottom:4px;cursor:pointer;transition:.3s;color:#8888bb;font-size:14px;display:flex;align-items:center;gap:10px;border:1px solid transparent}
         .chat-item:hover{background:rgba(255,255,255,.03);color:#d0d0f0}
         .chat-item.active{background:rgba(108,92,231,.12);border-color:rgba(108,92,231,.2);color:#e0e0ff}
-        .chat-item .chat-icon{font-size:16px;opacity:.5;font-family:'Segoe UI',sans-serif}
+        .chat-item .chat-icon{font-size:16px;opacity:.5}
         .chat-item .chat-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .chat-item .chat-del{opacity:0;cursor:pointer;transition:.3s;font-size:14px;color:#555577;font-family:'Segoe UI',sans-serif}
+        .chat-item .chat-del{opacity:0;cursor:pointer;transition:.3s;font-size:14px;color:#555577}
         .chat-item:hover .chat-del{opacity:1}
         .chat-item .chat-del:hover{color:#e17055}
         .settings-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:999;opacity:0;pointer-events:none;transition:.3s;display:flex;align-items:center;justify-content:center}
@@ -106,10 +106,15 @@
         .color-option{width:38px;height:38px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:.3s}
         .color-option:hover{transform:scale(1.1)}
         .color-option.active{border-color:#fff;box-shadow:0 0 20px rgba(108,92,231,.4)}
-        .color-option.locked{opacity:.4;filter:grayscale(.6);cursor:pointer;position:relative}
-        .color-option.locked::after{content:'🔒';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px}
-        .theme-toggle{padding:8px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.03);color:#8888bb;cursor:pointer;transition:.3s;font-size:13px;margin-right:6px}
-        .theme-toggle:hover{background:rgba(108,92,231,.1);border-color:rgba(108,92,231,.2)}
+        .color-option.locked{opacity:.5;filter:grayscale(.7);cursor:pointer;position:relative}
+        .color-option.locked::after{content:'LOCK';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:8px;color:#888;font-weight:700;letter-spacing:1px;text-shadow:0 0 10px rgba(0,0,0,.8)}
+        .theme-toggle{width:60px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);cursor:pointer;transition:.3s;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+        .theme-toggle .sun{position:absolute;left:4px;top:4px;width:26px;height:26px;border-radius:50%;background:#fdcb6e;transition:.3s;box-shadow:0 0 20px rgba(253,203,110,.3)}
+        .theme-toggle .moon{position:absolute;right:4px;top:4px;width:26px;height:26px;border-radius:50%;background:#b0b0d0;transition:.3s;opacity:0;transform:scale(.5)}
+        .theme-toggle .divider{position:absolute;top:0;left:50%;width:2px;height:100%;background:rgba(255,255,255,.05)}
+        body.light-theme .theme-toggle .sun{opacity:0;transform:scale(.5)}
+        body.light-theme .theme-toggle .moon{opacity:1;transform:scale(1)}
+        .theme-toggle:hover{border-color:rgba(108,92,231,.3);background:rgba(108,92,231,.05)}
         .status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
         .status-dot.online{background:#00b894;box-shadow:0 0 10px #00b894}
         .status-dot.offline{background:#e17055;box-shadow:0 0 10px #e17055}
@@ -143,11 +148,9 @@
         .chat-header .left .avatar-mini .tiny:nth-child(17){width:1.5px;height:1.5px;top:30px;left:20px;animation-delay:.8s}
         .chat-header .left .chat-title{color:#e0e0ff;font-size:22px;font-weight:700;letter-spacing:.5px;white-space:nowrap}
         .chat-header .left .chat-title .hl{background:linear-gradient(135deg,#6c5ce7,#a29bfe);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .header-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.3s;font-size:16px;color:#8888bb;flex-shrink:0;font-family:'Segoe UI',sans-serif;font-weight:300}
+        .header-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.3s;font-size:16px;color:#8888bb;flex-shrink:0;font-weight:300}
         .header-btn:hover{background:rgba(108,92,231,.15);border-color:rgba(108,92,231,.3);color:#e0e0ff}
         .header-btn.danger:hover{color:#e17055}
-        .done-btn{padding:8px 20px;border:none;border-radius:30px;background:linear-gradient(135deg,#00b894,#00cec9);color:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:.3s;box-shadow:0 4px 20px rgba(0,206,201,.2);display:flex;align-items:center;gap:6px;flex-shrink:0;margin-left:12px;font-family:'Segoe UI',sans-serif}
-        .done-btn:hover{transform:scale(1.04);box-shadow:0 6px 30px rgba(0,206,201,.4)}
         .menu-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;width:40px;height:40px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;cursor:pointer;transition:.3s;flex-shrink:0;order:-1}
         .menu-btn:hover{background:rgba(108,92,231,.15)}
         .menu-btn span{display:block;width:20px;height:2px;background:#8888bb;border-radius:2px;transition:.3s}
@@ -173,18 +176,18 @@
         .result-panel::-webkit-scrollbar-thumb{background:rgba(108,92,231,.3);border-radius:10px}
         .result-panel .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px}
         .result-panel .top h2{color:#e0e0ff;font-size:20px}
-        .result-panel .top .close-result{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:6px 16px;color:#8888bb;cursor:pointer;transition:.3s;font-family:'Segoe UI',sans-serif}
+        .result-panel .top .close-result{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:6px 16px;color:#8888bb;cursor:pointer;transition:.3s}
         .result-panel .top .close-result:hover{background:rgba(255,50,50,.1);border-color:rgba(255,50,50,.2);color:#e0e0ff}
         #gameZone{width:100%;height:350px;background:#000;border-radius:16px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#fff;border:1px solid rgba(108,92,231,.15);margin-bottom:14px}
-        .game-btn{padding:12px 24px;background:#6c5ce7;border:none;color:#fff;border-radius:10px;cursor:pointer;font-size:16px;font-weight:600;transition:.2s;font-family:'Segoe UI',sans-serif}
+        .game-btn{padding:12px 24px;background:#6c5ce7;border:none;color:#fff;border-radius:10px;cursor:pointer;font-size:16px;font-weight:600;transition:.2s}
         .game-btn:hover{transform:scale(1.05)}
         #player{width:24px;height:24px;background:#00b894;position:absolute;border-radius:6px;left:50px;top:150px;display:none;box-shadow:0 0 10px #00b894}
         #monster{width:30px;height:30px;background:#e17055;position:absolute;border-radius:50%;right:40px;top:147px;display:none;box-shadow:0 0 10px #e17055}
-        #scoreBoard{position:absolute;top:14px;left:16px;display:none;font-weight:700;font-size:16px;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.8);font-family:'Segoe UI',sans-serif}
+        #scoreBoard{position:absolute;top:14px;left:16px;display:none;font-weight:700;font-size:16px;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.8)}
         .result-panel .result-content{background:rgba(0,0,0,.3);border-radius:16px;padding:20px;border:1px solid rgba(108,92,231,.1);white-space:pre-wrap;color:#d0d0f0;font-size:14px;line-height:1.8;font-family:'Courier New',monospace;max-height:250px;overflow-y:auto;display:none}
         .result-panel .result-content::-webkit-scrollbar{width:4px}
         .result-panel .result-content::-webkit-scrollbar-thumb{background:rgba(108,92,231,.3);border-radius:10px}
-        .result-panel .copy-btn{align-self:flex-start;padding:10px 28px;border:none;border-radius:14px;background:linear-gradient(135deg,#6c5ce7,#a29bfe);color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:.3s;display:none;font-family:'Segoe UI',sans-serif}
+        .result-panel .copy-btn{align-self:flex-start;padding:10px 28px;border:none;border-radius:14px;background:linear-gradient(135deg,#6c5ce7,#a29bfe);color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:.3s;display:none}
         .result-panel .copy-btn:hover{transform:scale(1.03)}
         .input-area{padding:12px 24px 16px;border-top:1px solid rgba(255,255,255,.04);flex-shrink:0;background:rgba(10,10,26,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);position:relative;z-index:5;transition:transform .15s ease}
         .input-wrapper{background:rgba(255,255,255,.04);border-radius:24px;border:1px solid rgba(255,255,255,.06);transition:.3s}
@@ -251,9 +254,11 @@
         .modal-panel .tab:hover{background:rgba(108,92,231,.1)}
         .modal-panel textarea{width:100%;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.3);color:#e0e0ff;font-size:14px;outline:0;resize:vertical;min-height:80px;margin-bottom:10px;font-family:inherit}
         .modal-panel textarea:focus{border-color:rgba(108,92,231,.3)}
-        @media(max-width:768px){.sidebar{position:fixed;left:-280px;width:280px;z-index:100;transition:.3s;height:100vh;height:100dvh;border-radius:0 20px 20px 0}.sidebar.open{left:0}.sidebar-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:99;opacity:0;pointer-events:none;transition:.3s}.sidebar-overlay.show{opacity:1;pointer-events:all}.msg{max-width:95%}.chat-header .left .chat-title{font-size:18px}.input-area{padding:10px 16px 14px;transition:transform .15s ease}.input-btn .icon-clip,.input-btn .icon-mic{display:none}.header-btn{width:32px;height:32px;font-size:14px}.done-btn{font-size:12px;padding:6px 14px;margin-left:6px}.send-btn{width:36px;height:36px}.send-icon{width:18px;height:18px}.send-icon .arrow{border-width:6px 0 6px 12px}.send-icon .orbit{width:22px;height:22px}.chat-header{padding:12px 16px}.ai-status{font-size:10px;padding:2px 8px}.settings-panel{padding:20px}.modal-panel{padding:20px}}
+        .modal-panel .reset-password-btn{background:0 0;border:none;color:#6c5ce7;cursor:pointer;font-size:13px;text-align:center;width:100%;margin-top:4px;padding:4px}
+        .modal-panel .reset-password-btn:hover{text-decoration:underline}
+        @media(max-width:768px){.sidebar{position:fixed;left:-280px;width:280px;z-index:100;transition:.3s;height:100vh;height:100dvh;border-radius:0 20px 20px 0}.sidebar.open{left:0}.sidebar-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:99;opacity:0;pointer-events:none;transition:.3s}.sidebar-overlay.show{opacity:1;pointer-events:all}.msg{max-width:95%}.chat-header .left .chat-title{font-size:18px}.input-area{padding:10px 16px 14px;transition:transform .15s ease}.input-btn .icon-clip,.input-btn .icon-mic{display:none}.header-btn{width:32px;height:32px;font-size:14px}.send-btn{width:36px;height:36px}.send-icon{width:18px;height:18px}.send-icon .arrow{border-width:6px 0 6px 12px}.send-icon .orbit{width:22px;height:22px}.chat-header{padding:12px 16px}.ai-status{font-size:10px;padding:2px 8px}.settings-panel{padding:20px}.modal-panel{padding:20px}}
         @media(min-width:769px){.menu-btn{display:none}}
-        @media(max-width:480px){.chat-header{padding:10px 12px;min-height:56px}.chat-messages{padding:12px}.input-area{padding:8px 10px 12px}.input-row{padding:2px 2px 2px 12px;gap:4px}.input-row input{font-size:13px;padding:8px 0}.msg .bubble{font-size:13px;padding:10px 14px}.result-panel{padding:16px}.header-btn{width:28px;height:28px;font-size:12px;border-radius:8px}.done-btn{font-size:11px;padding:5px 12px}.chat-header .left .chat-title{font-size:16px}.send-btn{width:32px;height:32px}.send-icon{width:16px;height:16px}.send-icon .arrow{border-width:5px 0 5px 10px}.send-icon .orbit{width:20px;height:20px}.modal-panel{padding:16px}}
+        @media(max-width:480px){.chat-header{padding:10px 12px;min-height:56px}.chat-messages{padding:12px}.input-area{padding:8px 10px 12px}.input-row{padding:2px 2px 2px 12px;gap:4px}.input-row input{font-size:13px;padding:8px 0}.msg .bubble{font-size:13px;padding:10px 14px}.result-panel{padding:16px}.header-btn{width:28px;height:28px;font-size:12px;border-radius:8px}.chat-header .left .chat-title{font-size:16px}.send-btn{width:32px;height:32px}.send-icon{width:16px;height:16px}.send-icon .arrow{border-width:5px 0 5px 10px}.send-icon .orbit{width:20px;height:20px}.modal-panel{padding:16px}}
     </style>
 </head>
 <body>
@@ -277,50 +282,41 @@
             <div class="brand"><span class="hl" id="sidebarBrand">Nova</span></div>
         </div>
         <div style="display:flex;align-items:center;gap:6px;">
-            <button class="profile-btn" id="profileBtn">👤</button>
+            <button class="profile-btn" id="profileBtn">PROF</button>
             <button class="coins-btn" id="coinsBtn"><span id="coinsDisplay">0</span></button>
-            <button class="settings-btn-sidebar" id="settingsBtnSidebar">⚙</button>
+            <button class="settings-btn-sidebar" id="settingsBtnSidebar">SET</button>
         </div>
     </div>
-    <button class="new-chat-btn" id="newChatBtn">+ Создать чат</button>
+    <button class="new-chat-btn" id="newChatBtn">+ NEW</button>
     <div class="chat-list" id="chatList"></div>
 </div>
 
 <div class="settings-overlay" id="settingsOverlay">
     <div class="settings-panel">
-        <button class="close-settings" id="closeSettings">✕</button>
-        <h2>Настройки</h2>
-        <div class="sub">Настрой внешний вид ИИ</div>
+        <button class="close-settings" id="closeSettings">X</button>
+        <h2>Settings</h2>
+        <div class="sub">Customize AI appearance</div>
         <div class="setting-group">
-            <label>Имя ИИ</label>
-            <input type="text" id="aiNameInput" value="Nova" placeholder="Введите имя...">
+            <label>AI Name</label>
+            <input type="text" id="aiNameInput" value="Nova" placeholder="Enter name...">
         </div>
         <div class="setting-group">
-            <label>Цвет сообщений</label>
+            <label>Message Color</label>
             <div class="color-options" id="settingsColorOptions">
-                <div class="color-option active" style="background:#6c5ce7;" data-color="#6c5ce7"></div>
-                <div class="color-option" style="background:#00b894;" data-color="#00b894"></div>
-                <div class="color-option" style="background:#e17055;" data-color="#e17055"></div>
+                <div class="color-option active" style="background:#74b9ff;" data-color="#74b9ff"></div>
                 <div class="color-option" style="background:#fdcb6e;" data-color="#fdcb6e"></div>
-                <div class="color-option" style="background:#74b9ff;" data-color="#74b9ff"></div>
-                <div class="color-option" style="background:#fd79a8;" data-color="#fd79a8"></div>
-                <div class="color-option" style="background:#a29bfe;" data-color="#a29bfe"></div>
-                <div class="color-option" style="background:#55efc4;" data-color="#55efc4"></div>
-                <div class="color-option" style="background:#f39c12;" data-color="#f39c12"></div>
-                <div class="color-option" style="background:#e74c3c;" data-color="#e74c3c"></div>
-                <div class="color-option" style="background:#3498db;" data-color="#3498db"></div>
                 <div class="color-option" style="background:#1abc9c;" data-color="#1abc9c"></div>
                 <div class="color-option locked" style="background:#ff6b6b;" data-color="#ff6b6b" data-price="50"></div>
-                <div class="color-option locked" style="background:#ffd93d;" data-color="#ffd93d" data-price="50"></div>
                 <div class="color-option locked" style="background:#6bcb77;" data-color="#6bcb77" data-price="50"></div>
-                <div class="color-option locked" style="background:#4d96ff;" data-color="#4d96ff" data-price="50"></div>
-                <div class="color-option locked" style="background:linear-gradient(135deg,#ff6b6b,#ffd93d);" data-color="linear-gradient(135deg,#ff6b6b,#ffd93d)" data-price="150"></div>
-                <div class="color-option locked" style="background:linear-gradient(135deg,#6c5ce7,#fd79a8);" data-color="linear-gradient(135deg,#6c5ce7,#fd79a8)" data-price="150"></div>
-                <div class="color-option locked" style="background:conic-gradient(from 0deg,#ff6b6b,#ffd93d,#6bcb77,#4d96ff,#a29bfe,#ff6b6b);" data-color="conic-gradient(from 0deg,#ff6b6b,#ffd93d,#6bcb77,#4d96ff,#a29bfe,#ff6b6b)" data-price="300"></div>
+                <div class="color-option locked" style="background:#a29bfe;" data-color="#a29bfe" data-price="50"></div>
             </div>
         </div>
         <div class="setting-group">
-            <button class="theme-toggle" id="themeToggle">🌓 Сменить тему</button>
+            <button class="theme-toggle" id="themeToggle">
+                <span class="sun"></span>
+                <span class="moon"></span>
+                <span class="divider"></span>
+            </button>
         </div>
     </div>
 </div>
@@ -340,12 +336,11 @@
             <div class="chat-title"><span class="hl" id="chatTitle">Nova</span></div>
             <div class="ai-status" id="aiStatus">
                 <span class="status-dot offline" id="statusDot"></span>
-                <span id="statusText">офлайн</span>
+                <span id="statusText">offline</span>
             </div>
-            <button class="done-btn" id="doneBtn">Готово</button>
         </div>
         <div class="right">
-            <button class="header-btn" id="exportChatBtn">⬇</button>
+            <button class="header-btn" id="exportChatBtn">EXP</button>
         </div>
     </div>
     <div class="chat-messages" id="chatMessages"></div>
@@ -354,7 +349,7 @@
             <div class="input-row">
                 <button class="input-btn" id="fileAttachBtn"><div class="icon-clip"></div></button>
                 <button class="input-btn" id="voiceInputBtn"><div class="icon-mic"></div></button>
-                <input type="text" id="userInput" placeholder="Напиши что-нибудь..." />
+                <input type="text" id="userInput" placeholder="Type something..." />
                 <button class="send-btn" id="sendBtn">
                     <div class="send-icon"><div class="arrow"></div><div class="orbit"><div class="orbit-dot"></div></div></div>
                 </button>
@@ -365,23 +360,23 @@
 
 <div class="loading-overlay" id="loadingOverlay">
     <div class="spinner"></div>
-    <div class="loading-text" id="loadingText">ИИ думает...</div>
+    <div class="loading-text" id="loadingText">AI thinking...</div>
 </div>
 
 <div class="result-overlay" id="resultOverlay">
     <div class="result-panel">
         <div class="top">
-            <h2 id="resultTitle">Твой результат</h2>
-            <button class="close-result" id="closeResult">Закрыть</button>
+            <h2 id="resultTitle">Result</h2>
+            <button class="close-result" id="closeResult">Close</button>
         </div>
         <div id="gameZone">
-            <button class="game-btn" id="startGameBtn">Запустить игру</button>
+            <button class="game-btn" id="startGameBtn">Start Game</button>
             <div id="player"></div>
             <div id="monster"></div>
-            <div id="scoreBoard">Счет: 0</div>
+            <div id="scoreBoard">Score: 0</div>
         </div>
         <div class="result-content" id="resultContent"></div>
-        <button class="copy-btn" id="copyResultBtn">Копировать код</button>
+        <button class="copy-btn" id="copyResultBtn">Copy</button>
     </div>
 </div>
 
@@ -389,7 +384,7 @@
 
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal-panel" id="modalPanel">
-        <button class="close-modal" id="closeModal">✕</button>
+        <button class="close-modal" id="closeModal">X</button>
         <div id="modalContent"></div>
     </div>
 </div>
@@ -411,6 +406,7 @@ const db = firebase.firestore();
 
 let currentUser = null;
 let userData = null;
+let ownedColors = [];
 
 const chatMessages = document.getElementById('chatMessages');
 const userInput = document.getElementById('userInput');
@@ -426,7 +422,6 @@ const settingsBtnSidebar = document.getElementById('settingsBtnSidebar');
 const settingsOverlay = document.getElementById('settingsOverlay');
 const closeSettings = document.getElementById('closeSettings');
 const aiNameInput = document.getElementById('aiNameInput');
-const doneBtn = document.getElementById('doneBtn');
 const loadingOverlay = document.getElementById('loadingOverlay');
 const resultOverlay = document.getElementById('resultOverlay');
 const resultContent = document.getElementById('resultContent');
@@ -452,10 +447,9 @@ const modalContent = document.getElementById('modalContent');
 let state = {
 chats: [],
 currentChatId: null,
-currentColor: '#6c5ce7',
+currentColor: '#74b9ff',
 assistantName: 'Nova',
-isTyping: false,
-ownedColors: ['#6c5ce7','#00b894','#e17055','#fdcb6e','#74b9ff','#fd79a8','#a29bfe','#55efc4','#f39c12','#e74c3c','#3498db','#1abc9c']
+isTyping: false
 };
 
 const history = [];
@@ -510,8 +504,8 @@ function createNewChat(){
 const id = Date.now();
 const chat = {
 id: id,
-name: 'Новый чат',
-messages: [{ role: 'ai', content: 'Привет! Чем могу помочь?' }],
+name: 'New Chat',
+messages: [{ role: 'ai', content: 'Hello! How can I help you?' }],
 context: { category: null, asked: [] }
 };
 state.chats.unshift(chat);
@@ -540,7 +534,7 @@ chatList.innerHTML = '';
 state.chats.forEach(chat => {
 const div = document.createElement('div');
 div.className = `chat-item${chat.id === state.currentChatId ? ' active' : ''}`;
-div.innerHTML = `<span class="chat-icon">✦</span><span class="chat-name">${chat.name}</span><span class="chat-del" data-id="${chat.id}">✕</span>`;
+div.innerHTML = `<span class="chat-icon">+</span><span class="chat-name">${chat.name}</span><span class="chat-del" data-id="${chat.id}">x</span>`;
 div.addEventListener('click', () => {
 state.currentChatId = chat.id;
 renderChats();
@@ -566,7 +560,7 @@ const div = document.createElement('div');
 div.className = `msg ${msg.role}`;
 const sender = document.createElement('div');
 sender.className = 'sender';
-if(msg.role === 'user') sender.textContent = 'Вы';
+if(msg.role === 'user') sender.textContent = 'You';
 else sender.innerHTML = `<span class="ai-name" style="color:${state.currentColor};">${state.assistantName}</span>`;
 const bubble = document.createElement('div');
 bubble.className = 'bubble';
@@ -599,7 +593,6 @@ sidebarBrand.style.webkitTextFillColor = 'transparent';
 document.querySelectorAll('.msg.user .bubble').forEach(el => { el.style.background = grad; });
 document.querySelectorAll('.ai-name').forEach(el => el.style.color = state.currentColor);
 sendBtn.style.background = grad;
-doneBtn.style.background = grad;
 document.querySelectorAll('.new-chat-btn').forEach(el => {
 el.style.borderColor = `${state.currentColor}44`;
 el.style.background = `${state.currentColor}14`;
@@ -623,7 +616,7 @@ const div = document.createElement('div');
 div.className = `msg ${role}`;
 const sender = document.createElement('div');
 sender.className = 'sender';
-if(role === 'user') sender.textContent = 'Вы';
+if(role === 'user') sender.textContent = 'You';
 else sender.innerHTML = `<span class="ai-name" style="color:${state.currentColor};">${state.assistantName}</span>`;
 const bubble = document.createElement('div');
 bubble.className = 'bubble';
@@ -661,7 +654,7 @@ return results.length > 0 ? results.join('\n') : null;
 }
 
 async function sendAIRequest(prompt, historyMessages = []){
-const systemPrompt = 'Ты — Nova, умный и дружелюбный ИИ-помощник. Отвечай кратко, по существу, с заботой о пользователе. Используй простой язык. Всегда старайся помочь. Максимум 2-3 предложения.';
+const systemPrompt = 'You are Nova, a smart and friendly AI assistant. Answer briefly, to the point, with care for the user. Use simple language. Always try to help. Maximum 2-3 sentences.';
 const messages = [{ role: 'system', content: systemPrompt }];
 const recentHistory = historyMessages.slice(-10);
 for(const msg of recentHistory){
@@ -677,7 +670,6 @@ method: 'POST',
 headers: { 'Content-Type': 'application/json' },
 body: JSON.stringify({
 messages: messages,
-provider: 'deepseek',
 model: 'deepseek-chat',
 temperature: 0.7,
 max_tokens: 200
@@ -690,44 +682,44 @@ return { success: false, error: error.error?.message || `HTTP ${response.status}
 const data = await response.json();
 return {
 success: true,
-content: data.choices?.[0]?.message?.content || 'Нет ответа'
+content: data.choices?.[0]?.message?.content || 'No response'
 };
 }catch(e){
-return { success: false, error: e.message || 'Ошибка запроса' };
+return { success: false, error: e.message || 'Request error' };
 }
 }
 
 function needsWebSearch(message){
-const keywords = ['погод','новост','сегодня','завтра','вчера','последн','сейчас','курс','доллар','евро','рубль','цена','стоимость','скидк','новый','вышел','релиз','анонс','событи','мероприят','результат','матч','игр','спорт','футбол','хоккей','ваканси','работа','зарплат','бюджет','политик','акци','криптов','биткоин','эфир','рынок'];
+const keywords = ['weather','news','today','tomorrow','yesterday','latest','now','price','cost','discount','new','release','event','result','match','game','sport','football','hockey','job','salary','budget','policy','stock','crypto','bitcoin','ethereum','market'];
 const lower = message.toLowerCase();
 return keywords.some(k => lower.includes(k));
 }
 
 async function getAIResponse(userMessage, chatHistory){
-updateStatus('thinking', 'думаю...');
+updateStatus('thinking', 'thinking...');
 let webInfo = null;
 let aiResponse = null;
 try{
 if(needsWebSearch(userMessage)){
-updateStatus('searching', 'поиск...');
+updateStatus('searching', 'searching...');
 webInfo = await searchWeb(userMessage);
 }
 let enhancedPrompt = userMessage;
 if(webInfo){
-enhancedPrompt = `Пользователь спросил: "${userMessage}"\n\nИнформация из интернета по теме:\n${webInfo}\n\nНа основе этой информации, дай краткий ответ на вопрос пользователя.`;
+enhancedPrompt = `User asked: "${userMessage}"\n\nInternet info:\n${webInfo}\n\nBased on this info, give a brief answer.`;
 }
-updateStatus('thinking', 'генерация...');
+updateStatus('thinking', 'generating...');
 const result = await sendAIRequest(enhancedPrompt, chatHistory);
 if(result && result.success){
 aiResponse = result.content;
 }else{
-aiResponse = result?.error || 'Извините, произошла ошибка. Попробуйте позже.';
+aiResponse = result?.error || 'Sorry, an error occurred. Try again later.';
 }
-updateStatus('online', 'готово');
+updateStatus('online', 'ready');
 return aiResponse;
 }catch(e){
-updateStatus('offline', 'ошибка');
-return 'Произошла ошибка: ' + e.message;
+updateStatus('offline', 'error');
+return 'Error: ' + e.message;
 }
 }
 
@@ -763,7 +755,7 @@ div.appendChild(bubble);
 chatMessages.appendChild(div);
 chatMessages.scrollTop = chatMessages.scrollHeight;
 applyColor();
-if(chat.name === 'Новый чат' && userMessage){
+if(chat.name === 'New Chat' && userMessage){
 const newName = userMessage.slice(0,30) + (userMessage.length >= 30 ? '...' : '');
 chat.name = newName;
 saveChats();
@@ -772,7 +764,7 @@ renderChats();
 }catch(e){
 const typing = document.getElementById('typingIndicator');
 if(typing) typing.remove();
-showNotification('Ошибка: ' + e.message);
+showNotification('Error: ' + e.message);
 }
 state.isTyping = false;
 sendBtn.disabled = false;
@@ -813,7 +805,6 @@ function toggleTheme(){
 document.body.classList.toggle('light-theme');
 const isLight = document.body.classList.contains('light-theme');
 localStorage.setItem('nova_theme', isLight ? 'light' : 'dark');
-themeToggle.textContent = isLight ? '🌑 Тёмная тема' : '🌓 Светлая тема';
 }
 
 function exportCurrentChat(){
@@ -827,7 +818,7 @@ a.href = url;
 a.download = `nova_chat_${chat.name.slice(0,20)}_${new Date().toISOString().slice(0,10)}.json`;
 a.click();
 URL.revokeObjectURL(url);
-showNotification('Чат экспортирован!');
+showNotification('Chat exported!');
 }
 
 function generateCodeResult(category){
@@ -835,7 +826,7 @@ if(category === 'game'){
 return `function initGame(){
 let player = document.getElementById('player');
 let monster = document.getElementById('monster');
-console.log("Игра успешно инициализирована!");
+console.log("Game initialized!");
 }`;
 }else{
 return `body{
@@ -873,26 +864,26 @@ player.style.left = pLeft + 'px';
 monster.style.left = mLeft + 'px';
 monster.style.top = mTop + 'px';
 isPlaying = true;
-scoreBoard.textContent = "Счет: " + score;
+scoreBoard.textContent = "Score: " + score;
 window.onkeydown = function(e){
 if(!isPlaying) return;
-if(e.key === 'ArrowUp' || e.key === 'w' || e.key === 'ц') pTop = Math.max(0, pTop - 15);
-if(e.key === 'ArrowDown' || e.key === 's' || e.key === 'ы') pTop = Math.min(320, pTop + 15);
-if(e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'ф') pLeft = Math.max(0, pLeft - 15);
-if(e.key === 'ArrowRight' || e.key === 'd' || e.key === 'в') pLeft = Math.min(570, pLeft + 15);
+if(e.key === 'ArrowUp' || e.key === 'w') pTop = Math.max(0, pTop - 15);
+if(e.key === 'ArrowDown' || e.key === 's') pTop = Math.min(320, pTop + 15);
+if(e.key === 'ArrowLeft' || e.key === 'a') pLeft = Math.max(0, pLeft - 15);
+if(e.key === 'ArrowRight' || e.key === 'd') pLeft = Math.min(570, pLeft + 15);
 player.style.top = pTop + 'px';
 player.style.left = pLeft + 'px';
 };
 gameInterval = setInterval(() => {
 if(!isPlaying) return;
 score++;
-scoreBoard.textContent = "Счет: " + score;
+scoreBoard.textContent = "Score: " + score;
 if(mLeft > pLeft) mLeft -= 3; else mLeft += 3;
 if(mTop > pTop) mTop -= 3; else mTop += 3;
 monster.style.left = mLeft + 'px';
 monster.style.top = mTop + 'px';
 if(Math.abs(pLeft - mLeft) < 22 && Math.abs(pTop - mTop) < 22){
-alert("Монстр поймал тебя! Твой итоговый счет: " + score);
+alert("Monster caught you! Score: " + score);
 reset();
 }
 }, 30);
@@ -945,30 +936,58 @@ coinsDisplay.textContent = '0';
 }
 }
 
+function updateColorOptions(){
+const container = document.getElementById('settingsColorOptions');
+const owned = ownedColors || [];
+document.querySelectorAll('.color-option').forEach(el => {
+const color = el.dataset.color;
+const price = el.dataset.price;
+if(price){
+if(owned.includes(color)){
+el.classList.remove('locked');
+el.style.filter = 'none';
+el.style.opacity = '1';
+el.style.cursor = 'pointer';
+el.style.position = 'static';
+el.innerHTML = '';
+}else{
+el.classList.add('locked');
+el.style.filter = 'grayscale(0.6)';
+el.style.opacity = '0.4';
+el.style.cursor = 'pointer';
+el.style.position = 'relative';
+el.innerHTML = 'LOCK';
+}
+}
+});
+}
+
 function showLogin(){
 openModal(`
-<h2>Вход</h2>
+<h2>Login</h2>
 <div id="authError" class="error-text"></div>
-<input type="text" id="loginUsername" placeholder="Никнейм">
-<input type="password" id="loginPassword" placeholder="Пароль">
-<button class="btn-primary" id="loginBtn">Войти</button>
-<div class="link-text" id="goToRegister">Нет аккаунта? Зарегистрироваться</div>
+<input type="text" id="loginUsername" placeholder="Username">
+<input type="password" id="loginPassword" placeholder="Password">
+<button class="btn-primary" id="loginBtn">Login</button>
+<button class="reset-password-btn" id="resetPasswordBtn">Forgot password?</button>
+<div class="link-text" id="goToRegister">No account? Register</div>
 `);
 document.getElementById('loginBtn').addEventListener('click', handleLogin);
 document.getElementById('goToRegister').addEventListener('click', showRegister);
+document.getElementById('resetPasswordBtn').addEventListener('click', handleResetPassword);
 document.getElementById('loginUsername').addEventListener('keydown', (e) => { if(e.key === 'Enter') handleLogin(); });
 document.getElementById('loginPassword').addEventListener('keydown', (e) => { if(e.key === 'Enter') handleLogin(); });
 }
 
 function showRegister(){
 openModal(`
-<h2>Регистрация</h2>
+<h2>Register</h2>
 <div id="authError" class="error-text"></div>
-<input type="text" id="regUsername" placeholder="Никнейм">
-<input type="email" id="regEmail" placeholder="Почта">
-<input type="password" id="regPassword" placeholder="Пароль">
-<button class="btn-primary" id="registerBtn">Зарегистрироваться</button>
-<div class="link-text" id="goToLogin">Уже есть аккаунт? Войти</div>
+<input type="text" id="regUsername" placeholder="Username">
+<input type="email" id="regEmail" placeholder="Email">
+<input type="password" id="regPassword" placeholder="Password">
+<button class="btn-primary" id="registerBtn">Register</button>
+<div class="link-text" id="goToLogin">Already have account? Login</div>
 `);
 document.getElementById('registerBtn').addEventListener('click', handleRegister);
 document.getElementById('goToLogin').addEventListener('click', showLogin);
@@ -982,7 +1001,7 @@ const username = document.getElementById('loginUsername').value.trim();
 const password = document.getElementById('loginPassword').value.trim();
 const errorEl = document.getElementById('authError');
 if(!username || !password){
-errorEl.textContent = 'Заполните все поля';
+errorEl.textContent = 'Fill all fields';
 errorEl.style.display = 'block';
 return;
 }
@@ -990,7 +1009,7 @@ try{
 const usersRef = db.collection('users');
 const snapshot = await usersRef.where('username', '==', username).get();
 if(snapshot.empty){
-errorEl.textContent = 'Пользователь не найден';
+errorEl.textContent = 'User not found';
 errorEl.style.display = 'block';
 return;
 }
@@ -1001,16 +1020,18 @@ await auth.signInWithEmailAndPassword(userDataDoc.email, password);
 currentUser = auth.currentUser;
 userData = userDataDoc;
 userData.id = userDoc.id;
+ownedColors = userData.ownedColors || [];
 localStorage.setItem('nova_user', JSON.stringify({ uid: currentUser.uid, data: userData }));
 closeModalFunction();
 updateCoinsDisplay();
-showNotification('Добро пожаловать, ' + username + '!');
+updateColorOptions();
+showNotification('Welcome, ' + username + '!');
 }catch(authError){
-errorEl.textContent = 'Неверный пароль';
+errorEl.textContent = 'Wrong password';
 errorEl.style.display = 'block';
 }
 }catch(error){
-errorEl.textContent = 'Ошибка: ' + error.message;
+errorEl.textContent = 'Error: ' + error.message;
 errorEl.style.display = 'block';
 }
 }
@@ -1021,17 +1042,17 @@ const email = document.getElementById('regEmail').value.trim();
 const password = document.getElementById('regPassword').value.trim();
 const errorEl = document.getElementById('authError');
 if(!username || !email || !password){
-errorEl.textContent = 'Заполните все поля';
+errorEl.textContent = 'Fill all fields';
 errorEl.style.display = 'block';
 return;
 }
 if(!email.includes('@') || !email.includes('.')){
-errorEl.textContent = 'Введите корректную почту';
+errorEl.textContent = 'Enter valid email';
 errorEl.style.display = 'block';
 return;
 }
 if(password.length < 6){
-errorEl.textContent = 'Пароль должен быть минимум 6 символов';
+errorEl.textContent = 'Password must be at least 6 characters';
 errorEl.style.display = 'block';
 return;
 }
@@ -1039,7 +1060,7 @@ try{
 const usersRef = db.collection('users');
 const snapshot = await usersRef.where('username', '==', username).get();
 if(!snapshot.empty){
-errorEl.textContent = 'Такое имя уже существует';
+errorEl.textContent = 'Username already exists';
 errorEl.style.display = 'block';
 return;
 }
@@ -1049,8 +1070,8 @@ await db.collection('users').doc(user.uid).set({
 username: username,
 email: email,
 coins: 0,
-ownedColors: ['#6c5ce7','#00b894','#e17055','#fdcb6e','#74b9ff','#fd79a8','#a29bfe','#55efc4','#f39c12','#e74c3c','#3498db','#1abc9c'],
-currentColor: '#6c5ce7',
+ownedColors: ['#74b9ff', '#fdcb6e', '#1abc9c'],
+currentColor: '#74b9ff',
 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
 nameChanges: 0
 });
@@ -1059,17 +1080,41 @@ userData = {
 username: username,
 email: email,
 coins: 0,
-ownedColors: ['#6c5ce7','#00b894','#e17055','#fdcb6e','#74b9ff','#fd79a8','#a29bfe','#55efc4','#f39c12','#e74c3c','#3498db','#1abc9c'],
-currentColor: '#6c5ce7',
+ownedColors: ['#74b9ff', '#fdcb6e', '#1abc9c'],
+currentColor: '#74b9ff',
 id: user.uid,
 nameChanges: 0
 };
+ownedColors = ['#74b9ff', '#fdcb6e', '#1abc9c'];
 localStorage.setItem('nova_user', JSON.stringify({ uid: user.uid, data: userData }));
 closeModalFunction();
 updateCoinsDisplay();
-showNotification('Регистрация успешна! Добро пожаловать, ' + username + '!');
+updateColorOptions();
+showNotification('Registration successful! Welcome, ' + username + '!');
 }catch(error){
-errorEl.textContent = 'Ошибка: ' + error.message;
+errorEl.textContent = 'Error: ' + error.message;
+errorEl.style.display = 'block';
+}
+}
+
+async function handleResetPassword(){
+const errorEl = document.getElementById('authError');
+const email = prompt('Enter email to reset password:');
+if(!email){
+errorEl.textContent = 'Enter email';
+errorEl.style.display = 'block';
+return;
+}
+if(!email.includes('@') || !email.includes('.')){
+errorEl.textContent = 'Enter valid email';
+errorEl.style.display = 'block';
+return;
+}
+try{
+await auth.sendPasswordResetEmail(email);
+showNotification('Password reset email sent to ' + email);
+}catch(error){
+errorEl.textContent = 'Error: ' + error.message;
 errorEl.style.display = 'block';
 }
 }
@@ -1079,30 +1124,30 @@ if(!currentUser){
 showLogin();
 return;
 }
-const username = userData?.username || 'Нет имени';
+const username = userData?.username || 'No name';
 const coins = userData?.coins || 0;
 const email = userData?.email || '';
 openModal(`
-<h2>Профиль</h2>
+<h2>Profile</h2>
 <div class="profile-avatar">${username.charAt(0).toUpperCase()}</div>
 <div style="text-align:center;font-size:20px;color:#e0e0ff;font-weight:600;">${username}</div>
 <div style="text-align:center;font-size:12px;color:#666688;margin-bottom:12px;">${email}</div>
 <div class="profile-field">
-<span class="label">Никнейм</span>
+<span class="label">Username</span>
 <span class="value" id="profileUsername">${username}</span>
 <button class="edit-btn" id="editUsernameBtn">✎</button>
 </div>
 <div class="profile-field">
-<span class="label">Пароль</span>
+<span class="label">Password</span>
 <span class="value">••••••••</span>
 <button class="edit-btn" id="editPasswordBtn">✎</button>
 </div>
 <div class="profile-field">
-<span class="label">Монеты</span>
-<span class="value" style="color:#fdcb6e;">${coins} 🪙</span>
+<span class="label">Coins</span>
+<span class="value" style="color:#fdcb6e;">${coins}</span>
 </div>
-<button class="btn-secondary" id="profileLettersBtn" style="margin-top:8px;">📨 Письма</button>
-<button class="btn-secondary" id="profileLogoutBtn" style="margin-top:4px;color:#e17055;">Выйти</button>
+<button class="btn-secondary" id="profileLettersBtn" style="margin-top:8px;">Letters</button>
+<button class="btn-secondary" id="profileLogoutBtn" style="margin-top:4px;color:#e17055;">Logout</button>
 `);
 document.getElementById('editUsernameBtn').addEventListener('click', showEditUsername);
 document.getElementById('editPasswordBtn').addEventListener('click', showEditPassword);
@@ -1113,19 +1158,19 @@ document.getElementById('profileLogoutBtn').addEventListener('click', handleLogo
 function showEditUsername(){
 const currentName = userData?.username || '';
 openModal(`
-<h2>Смена никнейма</h2>
+<h2>Change Username</h2>
 <div id="editError" class="error-text"></div>
-<input type="text" id="newUsername" placeholder="Новый никнейм" value="${currentName}">
+<input type="text" id="newUsername" placeholder="New username" value="${currentName}">
 <div style="font-size:12px;color:#666688;margin-top:-6px;margin-bottom:8px;">
-${userData?.nameChanges >= 1 ? '⚠️ Смена никнейма стоит 50 монет' : '✅ Первая смена бесплатна'}
+${userData?.nameChanges >= 1 ? 'Name change costs 50 coins' : 'First change is free'}
 </div>
-<button class="btn-primary" id="saveUsernameBtn">Сохранить</button>
+<button class="btn-primary" id="saveUsernameBtn">Save</button>
 `);
 document.getElementById('saveUsernameBtn').addEventListener('click', async () => {
 const newName = document.getElementById('newUsername').value.trim();
 const errorEl = document.getElementById('editError');
 if(!newName){
-errorEl.textContent = 'Введите никнейм';
+errorEl.textContent = 'Enter username';
 errorEl.style.display = 'block';
 return;
 }
@@ -1133,7 +1178,7 @@ try{
 const nameChanges = userData?.nameChanges || 0;
 if(nameChanges >= 1){
 if((userData?.coins || 0) < 50){
-errorEl.textContent = 'Недостаточно монет! Нужно 50 🪙';
+errorEl.textContent = 'Not enough coins! Need 50';
 errorEl.style.display = 'block';
 return;
 }
@@ -1155,11 +1200,11 @@ username: newName
 userData.username = newName;
 localStorage.setItem('nova_user', JSON.stringify({ uid: currentUser.uid, data: userData }));
 updateCoinsDisplay();
-showNotification('Никнейм изменён на ' + newName + '!');
+showNotification('Username changed to ' + newName + '!');
 closeModalFunction();
 showProfile();
 }catch(error){
-errorEl.textContent = 'Ошибка: ' + error.message;
+errorEl.textContent = 'Error: ' + error.message;
 errorEl.style.display = 'block';
 }
 });
@@ -1167,12 +1212,12 @@ errorEl.style.display = 'block';
 
 function showEditPassword(){
 openModal(`
-<h2>Смена пароля</h2>
+<h2>Change Password</h2>
 <div id="editError" class="error-text"></div>
-<input type="password" id="oldPassword" placeholder="Старый пароль">
-<input type="password" id="newPassword" placeholder="Новый пароль">
-<input type="password" id="confirmPassword" placeholder="Подтвердите пароль">
-<button class="btn-primary" id="savePasswordBtn">Сохранить</button>
+<input type="password" id="oldPassword" placeholder="Old password">
+<input type="password" id="newPassword" placeholder="New password">
+<input type="password" id="confirmPassword" placeholder="Confirm password">
+<button class="btn-primary" id="savePasswordBtn">Save</button>
 `);
 document.getElementById('savePasswordBtn').addEventListener('click', async () => {
 const oldPass = document.getElementById('oldPassword').value.trim();
@@ -1180,17 +1225,17 @@ const newPass = document.getElementById('newPassword').value.trim();
 const confirmPass = document.getElementById('confirmPassword').value.trim();
 const errorEl = document.getElementById('editError');
 if(!oldPass || !newPass || !confirmPass){
-errorEl.textContent = 'Заполните все поля';
+errorEl.textContent = 'Fill all fields';
 errorEl.style.display = 'block';
 return;
 }
 if(newPass.length < 6){
-errorEl.textContent = 'Пароль должен быть минимум 6 символов';
+errorEl.textContent = 'Password must be at least 6 characters';
 errorEl.style.display = 'block';
 return;
 }
 if(newPass !== confirmPass){
-errorEl.textContent = 'Пароли не совпадают';
+errorEl.textContent = 'Passwords do not match';
 errorEl.style.display = 'block';
 return;
 }
@@ -1198,11 +1243,11 @@ try{
 const credential = firebase.auth.EmailAuthProvider.credential(userData.email, oldPass);
 await currentUser.reauthenticateWithCredential(credential);
 await currentUser.updatePassword(newPass);
-showNotification('Пароль успешно изменён!');
+showNotification('Password changed successfully!');
 closeModalFunction();
 showProfile();
 }catch(error){
-errorEl.textContent = 'Ошибка: ' + error.message;
+errorEl.textContent = 'Error: ' + error.message;
 errorEl.style.display = 'block';
 }
 });
@@ -1212,40 +1257,42 @@ function handleLogout(){
 auth.signOut();
 currentUser = null;
 userData = null;
+ownedColors = [];
 localStorage.removeItem('nova_user');
 closeModalFunction();
 updateCoinsDisplay();
-showNotification('Вы вышли из аккаунта');
+updateColorOptions();
+showNotification('Logged out');
 }
 
 function showCoinsShop(){
 const coins = userData?.coins || 0;
 openModal(`
-<h2>🪙 Магазин монет</h2>
-<div class="coins-balance">💰 ${coins} монет</div>
-<div style="margin-bottom:12px;font-size:14px;color:#8888bb;">Пополни баланс:</div>
+<h2>Coin Shop</h2>
+<div class="coins-balance">${coins} coins</div>
+<div style="margin-bottom:12px;font-size:14px;color:#8888bb;">Top up balance:</div>
 <div class="buy-option">
-<span>100 монет</span>
-<span class="price">2 грн</span>
-<button class="btn-buy" data-amount="100" data-price="2">Купить</button>
+<span>100 coins</span>
+<span class="price">2 UAH</span>
+<button class="btn-buy" data-amount="100" data-price="2">Buy</button>
 </div>
 <div class="buy-option">
-<span>300 монет</span>
-<span class="price">5 грн</span>
-<button class="btn-buy" data-amount="300" data-price="5">Купить</button>
+<span>300 coins</span>
+<span class="price">5 UAH</span>
+<button class="btn-buy" data-amount="300" data-price="5">Buy</button>
 </div>
 <div class="buy-option">
-<span>670 монет</span>
-<span class="price">10 грн</span>
-<button class="btn-buy" data-amount="670" data-price="10">Купить</button>
+<span>670 coins</span>
+<span class="price">10 UAH</span>
+<button class="btn-buy" data-amount="670" data-price="10">Buy</button>
 </div>
-<div style="font-size:12px;color:#666688;margin-top:12px;text-align:center;">💳 Покупка симулирована (без реальной оплаты)</div>
+<div style="font-size:12px;color:#666688;margin-top:12px;text-align:center;">Purchase simulated (no real payment)</div>
 `);
 document.querySelectorAll('.btn-buy').forEach(btn => {
 btn.addEventListener('click', async () => {
 const amount = parseInt(btn.dataset.amount);
 if(!currentUser){
-showNotification('Сначала войдите в аккаунт');
+showNotification('Please login first');
 return;
 }
 try{
@@ -1255,10 +1302,10 @@ coins: firebase.firestore.FieldValue.increment(amount)
 userData.coins = (userData.coins || 0) + amount;
 localStorage.setItem('nova_user', JSON.stringify({ uid: currentUser.uid, data: userData }));
 updateCoinsDisplay();
-showNotification(`+${amount} монет добавлено!`);
+showNotification('+' + amount + ' coins added!');
 showCoinsShop();
 }catch(error){
-showNotification('Ошибка: ' + error.message);
+showNotification('Error: ' + error.message);
 }
 });
 });
@@ -1266,10 +1313,10 @@ showNotification('Ошибка: ' + error.message);
 
 function showLetters(){
 openModal(`
-<h2>📨 Письма</h2>
+<h2>Letters</h2>
 <div class="tabs">
-<button class="tab active" id="tabReceived">Полученные</button>
-<button class="tab" id="tabSend">Отправить</button>
+<button class="tab active" id="tabReceived">Received</button>
+<button class="tab" id="tabSend">Send</button>
 </div>
 <div id="lettersContent"></div>
 `);
@@ -1289,14 +1336,14 @@ loadSendLetterForm();
 async function loadReceivedLetters(){
 const container = document.getElementById('lettersContent');
 if(!currentUser){
-container.innerHTML = '<div style="color:#666688;text-align:center;padding:20px;">Войдите чтобы видеть письма</div>';
+container.innerHTML = '<div style="color:#666688;text-align:center;padding:20px;">Login to see letters</div>';
 return;
 }
 try{
 const lettersRef = db.collection('letters').where('to', '==', userData.username);
 const snapshot = await lettersRef.orderBy('createdAt', 'desc').get();
 if(snapshot.empty){
-container.innerHTML = '<div style="color:#666688;text-align:center;padding:20px;">Нет полученных писем</div>';
+container.innerHTML = '<div style="color:#666688;text-align:center;padding:20px;">No letters received</div>';
 return;
 }
 let html = '';
@@ -1304,7 +1351,7 @@ snapshot.forEach(doc => {
 const letter = doc.data();
 html += `
 <div class="letter-item" data-id="${doc.id}">
-<div class="from">От: ${letter.from}</div>
+<div class="from">From: ${letter.from}</div>
 <div class="subject">${letter.message.slice(0,50)}${letter.message.length > 50 ? '...' : ''}</div>
 <div class="preview">${letter.message}</div>
 </div>
@@ -1316,11 +1363,11 @@ el.addEventListener('click', async () => {
 const id = el.dataset.id;
 const doc = await db.collection('letters').doc(id).get();
 const letter = doc.data();
-alert(`От: ${letter.from}\n\n${letter.message}`);
+alert('From: ' + letter.from + '\n\n' + letter.message);
 });
 });
 }catch(error){
-container.innerHTML = '<div style="color:#e17055;text-align:center;padding:20px;">Ошибка загрузки</div>';
+container.innerHTML = '<div style="color:#e17055;text-align:center;padding:20px;">Error loading</div>';
 }
 }
 
@@ -1328,21 +1375,21 @@ function loadSendLetterForm(){
 const container = document.getElementById('lettersContent');
 container.innerHTML = `
 <div id="sendError" class="error-text"></div>
-<input type="text" id="letterTo" placeholder="Кому (никнейм)">
-<textarea id="letterMessage" placeholder="Текст письма..."></textarea>
-<button class="btn-primary" id="sendLetterBtn">Отправить</button>
+<input type="text" id="letterTo" placeholder="To (username)">
+<textarea id="letterMessage" placeholder="Message..."></textarea>
+<button class="btn-primary" id="sendLetterBtn">Send</button>
 `;
 document.getElementById('sendLetterBtn').addEventListener('click', async () => {
 const to = document.getElementById('letterTo').value.trim();
 const message = document.getElementById('letterMessage').value.trim();
 const errorEl = document.getElementById('sendError');
 if(!to || !message){
-errorEl.textContent = 'Заполните все поля';
+errorEl.textContent = 'Fill all fields';
 errorEl.style.display = 'block';
 return;
 }
 if(!currentUser){
-errorEl.textContent = 'Сначала войдите в аккаунт';
+errorEl.textContent = 'Please login first';
 errorEl.style.display = 'block';
 return;
 }
@@ -1350,7 +1397,7 @@ try{
 const usersRef = db.collection('users');
 const snapshot = await usersRef.where('username', '==', to).get();
 if(snapshot.empty){
-errorEl.textContent = 'Пользователь не найден';
+errorEl.textContent = 'User not found';
 errorEl.style.display = 'block';
 return;
 }
@@ -1360,12 +1407,12 @@ to: to,
 message: message,
 createdAt: firebase.firestore.FieldValue.serverTimestamp()
 });
-showNotification('Письмо отправлено!');
+showNotification('Letter sent!');
 document.getElementById('letterTo').value = '';
 document.getElementById('letterMessage').value = '';
 errorEl.style.display = 'none';
 }catch(error){
-errorEl.textContent = 'Ошибка: ' + error.message;
+errorEl.textContent = 'Error: ' + error.message;
 errorEl.style.display = 'block';
 }
 });
@@ -1373,20 +1420,20 @@ errorEl.style.display = 'block';
 
 function buyColor(color, price){
 if(!currentUser){
-showNotification('Сначала войдите в аккаунт');
+showNotification('Please login first');
 return;
 }
 openModal(`
-<h2>Покупка цвета</h2>
+<h2>Buy Color</h2>
 <div style="width:80px;height:80px;border-radius:50%;margin:0 auto 16px;background:${color};border:2px solid rgba(255,255,255,.1);"></div>
-<div style="text-align:center;color:#e0e0ff;font-size:18px;margin-bottom:8px;">${price} 🪙</div>
-<div style="text-align:center;color:#8888bb;font-size:13px;margin-bottom:16px;">Баланс: ${userData?.coins || 0} 🪙</div>
-<button class="btn-primary" id="confirmBuyBtn">Купить</button>
-<button class="btn-secondary" id="cancelBuyBtn" style="margin-top:4px;">Отмена</button>
+<div style="text-align:center;color:#e0e0ff;font-size:18px;margin-bottom:8px;">${price} coins</div>
+<div style="text-align:center;color:#8888bb;font-size:13px;margin-bottom:16px;">Balance: ${userData?.coins || 0} coins</div>
+<button class="btn-primary" id="confirmBuyBtn">Buy</button>
+<button class="btn-secondary" id="cancelBuyBtn" style="margin-top:4px;">Cancel</button>
 `);
 document.getElementById('confirmBuyBtn').addEventListener('click', async () => {
 if((userData?.coins || 0) < price){
-showNotification('Недостаточно монет!');
+showNotification('Not enough coins!');
 return;
 }
 try{
@@ -1399,51 +1446,23 @@ if(!userData.ownedColors) userData.ownedColors = [];
 if(!userData.ownedColors.includes(color)){
 userData.ownedColors.push(color);
 }
+ownedColors = userData.ownedColors;
 localStorage.setItem('nova_user', JSON.stringify({ uid: currentUser.uid, data: userData }));
 updateCoinsDisplay();
-showNotification('Цвет куплен!');
+showNotification('Color purchased!');
 closeModalFunction();
 updateColorOptions();
 }catch(error){
-showNotification('Ошибка: ' + error.message);
+showNotification('Error: ' + error.message);
 }
 });
 document.getElementById('cancelBuyBtn').addEventListener('click', closeModalFunction);
-}
-
-function updateColorOptions(){
-const container = document.getElementById('settingsColorOptions');
-const owned = userData?.ownedColors || state.ownedColors;
-document.querySelectorAll('.color-option').forEach(el => {
-const color = el.dataset.color;
-const price = el.dataset.price;
-if(price){
-if(owned.includes(color) || owned.includes(el.style.background)){
-el.classList.remove('locked');
-el.style.filter = 'none';
-el.style.opacity = '1';
-el.style.cursor = 'pointer';
-el.style.position = 'static';
-el.style.borderColor = 'transparent';
-el.innerHTML = '';
-}else{
-el.classList.add('locked');
-el.style.filter = 'grayscale(0.6)';
-el.style.opacity = '0.4';
-el.style.cursor = 'pointer';
-el.style.position = 'relative';
-el.style.borderColor = 'transparent';
-el.innerHTML = '<span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;">🔒</span>';
-}
-}
-});
 }
 
 function init(){
 const savedTheme = localStorage.getItem('nova_theme');
 if(savedTheme === 'light'){
 document.body.classList.add('light-theme');
-themeToggle.textContent = '🌑 Тёмная тема';
 }
 const savedUser = localStorage.getItem('nova_user');
 if(savedUser){
@@ -1452,6 +1471,7 @@ const data = JSON.parse(savedUser);
 if(data && data.uid){
 currentUser = { uid: data.uid };
 userData = data.data;
+ownedColors = userData.ownedColors || [];
 updateCoinsDisplay();
 updateColorOptions();
 }
@@ -1482,7 +1502,6 @@ closeSidebar();
 menuToggle.addEventListener('click', toggleSidebar);
 sidebarOverlay.addEventListener('click', closeSidebar);
 
-doneBtn.addEventListener('click', runAiGeneration);
 closeResult.addEventListener('click', function(){
 GameModule.stop();
 resultOverlay.classList.remove('show');
@@ -1497,8 +1516,8 @@ startGameBtn.addEventListener('click', GameModule.start);
 copyResultBtn.addEventListener('click', () => {
 navigator.clipboard.writeText(resultContent.textContent).then(() => {
 const old = copyResultBtn.textContent;
-copyResultBtn.textContent = 'Скопировано!';
-setTimeout(() => { copyResultBtn.textContent = 'Копировать код'; }, 1500);
+copyResultBtn.textContent = 'Copied!';
+setTimeout(() => { copyResultBtn.textContent = 'Copy'; }, 1500);
 });
 });
 
@@ -1511,18 +1530,12 @@ if(e.target === settingsOverlay) toggleSettings();
 document.querySelectorAll('#settingsColorOptions .color-option').forEach(el => {
 if(!el.classList.contains('locked')){
 el.addEventListener('click', function(){
-if(this.classList.contains('locked')){
-const price = parseInt(this.dataset.price) || 50;
-const color = this.dataset.color || this.style.background;
-buyColor(color, price);
-return;
-}
 setAccentColor(this.dataset.color);
 });
 }else{
 el.addEventListener('click', function(){
 const price = parseInt(this.dataset.price) || 50;
-const color = this.dataset.color || this.style.background;
+const color = this.dataset.color;
 buyColor(color, price);
 });
 }
@@ -1544,8 +1557,10 @@ db.collection('users').doc(currentUser.uid).get().then(doc => {
 if(doc.exists){
 userData = doc.data();
 userData.id = doc.id;
+ownedColors = userData.ownedColors || [];
 localStorage.setItem('nova_user', JSON.stringify({ uid: currentUser.uid, data: userData }));
 updateCoinsDisplay();
+updateColorOptions();
 showProfile();
 }else{
 showLogin();
@@ -1561,7 +1576,7 @@ showLogin();
 
 coinsBtn.addEventListener('click', () => {
 if(!currentUser){
-showNotification('Сначала войдите в аккаунт');
+showNotification('Please login first');
 showLogin();
 return;
 }
@@ -1569,13 +1584,15 @@ db.collection('users').doc(currentUser.uid).get().then(doc => {
 if(doc.exists){
 userData = doc.data();
 userData.id = doc.id;
+ownedColors = userData.ownedColors || [];
 localStorage.setItem('nova_user', JSON.stringify({ uid: currentUser.uid, data: userData }));
 updateCoinsDisplay();
+updateColorOptions();
 showCoinsShop();
 }else{
-showNotification('Ошибка загрузки данных');
+showNotification('Error loading data');
 }
-}).catch(() => showNotification('Ошибка'));
+}).catch(() => showNotification('Error'));
 });
 
 closeModal.addEventListener('click', closeModalFunction);
@@ -1593,8 +1610,8 @@ if(!file) return;
 const reader = new FileReader();
 reader.onload = function(ev){
 const content = ev.target.result;
-userInput.value = content.slice(0,500) + (content.length > 500 ? '\n... (файл обрезан)' : '');
-showNotification(`Файл "${file.name}" загружен (${content.length} символов)`);
+userInput.value = content.slice(0,500) + (content.length > 500 ? '\n... (file truncated)' : '');
+showNotification('File "' + file.name + '" loaded (' + content.length + ' chars)');
 };
 reader.readAsText(file);
 fileInput.value = '';
@@ -1602,24 +1619,24 @@ fileInput.value = '';
 
 voiceInputBtn.addEventListener('click', function(){
 if(!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)){
-showNotification('Голосовой ввод не поддерживается');
+showNotification('Voice input not supported');
 return;
 }
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = new SpeechRecognition();
-recognition.lang = 'ru-RU';
+recognition.lang = 'en-US';
 recognition.continuous = false;
 recognition.interimResults = false;
-showNotification('🎤 Говорите...');
+showNotification('Speak...');
 recognition.start();
 recognition.onresult = function(e){
 const text = e.results[0][0].transcript;
 userInput.value = text;
-showNotification(`Распознано: "${text}"`);
+showNotification('Recognized: "' + text + '"');
 setTimeout(handleSend, 300);
 };
 recognition.onerror = function(e){
-showNotification('Ошибка распознавания: ' + e.error);
+showNotification('Recognition error: ' + e.error);
 };
 });
 
@@ -1628,8 +1645,8 @@ method: 'POST',
 headers: { 'Content-Type': 'application/json' },
 body: JSON.stringify({ test: true })
 })
-.then(() => updateStatus('online', 'готово'))
-.catch(() => updateStatus('offline', 'сервер недоступен'));
+.then(() => updateStatus('online', 'ready'))
+.catch(() => updateStatus('offline', 'server unavailable'));
 
 userInput.focus();
 
@@ -1642,17 +1659,15 @@ if(Array.isArray(messages) && messages.length > 0){
 const chat = getCurrentChat();
 if(chat){
 chat.messages = messages;
-chat.name = 'Импортированный чат';
+chat.name = 'Imported chat';
 saveChats();
 renderMessages();
 renderChats();
-showNotification('Чат загружен из ссылки!');
+showNotification('Chat loaded from link!');
 }
 }
 }catch(e){}
 }
-
-updateColorOptions();
 }
 
 document.addEventListener('DOMContentLoaded', init);
@@ -1710,7 +1725,7 @@ for(let i=0;i<120;i++){
 const s = document.createElement('div');
 s.className = 'star-bg';
 const size = Math.random() * 2.5 + 0.5;
-s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--duration:${Math.random()*3+2}s;animation-delay:${Math.random()*5}s`;
+s.style.cssText = 'width:'+size+'px;height:'+size+'px;left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;--duration:'+(Math.random()*3+2)+'s;animation-delay:'+(Math.random()*5)+'s';
 c.appendChild(s);
 }
 })();
@@ -1718,4 +1733,3 @@ c.appendChild(s);
 </script>
 </body>
 </html>
-```
